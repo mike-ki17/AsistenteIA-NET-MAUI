@@ -1,12 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
-namespace AsistenteIA.Services
+namespace AsistenteIA.Services;
+public class ApiKeyService
 {
-    internal class ApiKeyService
-    {
-    }
+    private const string KeyName = "pollinations_api_key";
+
+    public Task SaveAsync(string key) =>
+        SecureStorage.Default.SetAsync(KeyName, key.Trim());
+
+    public Task<string?> GetAsync() =>
+        SecureStorage.Default.GetAsync(KeyName);
+
+    public bool Remove() => SecureStorage.Default.Remove(KeyName);
 }

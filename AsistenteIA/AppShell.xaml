@@ -1,14 +1,15 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <Shell
     x:Class="AsistenteIA.AppShell"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:local="clr-namespace:AsistenteIA"
-    Title="AsistenteIA">
+    xmlns:views="clr-namespace:AsistenteIA.Views">
 
-    <ShellContent
-        Title="Home"
-        ContentTemplate="{DataTemplate local:MainPage}"
-        Route="MainPage" />
+    <TabBar>
+        <ShellContent Title="Inicio" ContentTemplate="{DataTemplate views:HomePage}" />
+        <ShellContent Title="Consultar" ContentTemplate="{DataTemplate views:ChatPage}" />
+        <ShellContent Title="Historial" ContentTemplate="{DataTemplate views:HistoryPage}" />
+        <ShellContent Title="Configuración" ContentTemplate="{DataTemplate views:SettingsPage}" />
+    </TabBar>
 
 </Shell>

@@ -1,12 +1,67 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Net.Http.Headers;
+using System.Net.Http.Json;
 
-namespace AsistenteIA.Services
+
+using AsistenteIA.Models;
+namespace AsistenteIA.Services;
+
+public class AiService
 {
-    internal class AiService
+    private readonly HttpClient _client;
+    private readonly ApiKeyService _keyService;
+
+    public AiService(HttpClient client, ApiKeyService keyService)
     {
+        _client = client;
+        _keyService = keyService;
+    }
+
+    public async Task<string> AskAsync(
+        string prompt,
+        string model,
+        CancellationToken token = default)
+    {
+        string cleanPrompt = prompt.Trim();
+        if (cleanPrompt.Length < 5)
+            throw new ArgumentException("La consulta es demasiado corta.");
+        if (cleanPrompt.Length > 2000)
+            throw new ArgumentException("La consulta supera 2000 caracteres.");
+
+        string? apiKey = await _keyService.GetAsync();
+        if (string.IsNullOrWhiteSpace(apiKey))
+            throw new InvalidOperationException("Configure la clave de la API.");
+
+        var requestBody = new ChatRequest
+        {
+            Model = model,
+            Messages =
+            [
+                new ChatMessage
+                {
+                    Role = "system",
+                    Content = "Eres un asistente académico. Responde de forma clara, " +
+                              "indica incertidumbre y no inventes fuentes."
+                },
+                new ChatMessage { Role = "user", Content = cleanPrompt }
+            ]
+        };
+
+        using var request = new HttpRequestMessage(
+            HttpMethod.Post, "chat/completions");
+        request.Headers.Authorization =
+            new AuthenticationHeaderValue("Bearer", apiKey);
+        request.Content = JsonContent.Create(requestBody);
+
+        using HttpResponseMessage response =
+            await _client.SendAsync(request, token);
+        response.EnsureSuccessStatusCode();
+
+        ChatResponse? result = await response.Content
+            .ReadFromJsonAsync<ChatResponse>(cancellationToken: token);
+
+        string? answer = result?.Choices.FirstOrDefault()?.Message.Content;
+        return string.IsNullOrWhiteSpace(answer)
+            ? "El servicio no devolvió contenido."
+            : answer.Trim();
     }
 }
