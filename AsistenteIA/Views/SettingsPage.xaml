@@ -3,7 +3,40 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="AsistenteIA.Views.SettingsPage"
              Title="Configuración">
-    <VerticalStackLayout Padding="20">
-        <Label Text="Configuración de la API" FontSize="22" FontAttributes="Bold"/>
-    </VerticalStackLayout>
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="15">
+            <Label Text="Configuración de la API" FontSize="22" FontAttributes="Bold"/>
+
+            <!-- 1. Aviso visible requerido -->
+            <Frame BackgroundColor="#FFF3CD" BorderColor="#FFEEBA" Padding="10">
+                <Label Text="Aviso: No ingresar datos personales, contraseñas, información confidencial ni documentos institucionales sensibles." 
+                       TextColor="#856404" FontSize="12" />
+            </Frame>
+
+            <!-- 2. Entrada de clave segura -->
+            <Label Text="Clave de acceso (API Key):" FontAttributes="Bold" />
+            <Entry Text="{Binding ApiKey}" 
+                   IsPassword="True" 
+                   Placeholder="Ingrese su clave aquí" />
+
+            <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
+                <Button Text="Guardar Clave" Command="{Binding SaveKeyCommand}" />
+                <Button Grid.Column="1" Text="Eliminar Clave" Command="{Binding DeleteKeyCommand}" BackgroundColor="Red" />
+            </Grid>
+
+            <!-- 3. Selector de modelo -->
+            <Label Text="Modelo de Inteligencia Artificial:" FontAttributes="Bold" Margin="0,10,0,0" />
+            <Picker ItemsSource="{Binding AvailableModels}" 
+                    SelectedItem="{Binding SelectedModel}" 
+                    Title="Seleccione un modelo" />
+
+            <!-- 4. Prueba de conexión -->
+            <Button Text="Probar conexión" Command="{Binding TestConnectionCommand}" Margin="0,10,0,0" />
+
+            <!-- Mensajes de estado -->
+            <Label Text="{Binding StatusMessage}" FontSize="14" HorizontalOptions="Center" Margin="0,10,0,0" />
+
+        </VerticalStackLayout>
+    </ScrollView>
 </ContentPage>

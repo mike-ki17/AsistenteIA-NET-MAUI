@@ -2,34 +2,44 @@
 
 namespace AsistenteIA.Models;
 
-
-
 public class ChatRequest
 {
-    [JsonPropertyName("model")]
-    public string Model { get; set; } = string.Empty;
+    [JsonPropertyName("contents")]
+    public List<ChatContent> Contents { get; set; } = [];
 
-    [JsonPropertyName("messages")]
-    public List<ChatMessage> Messages { get; set; } = [];
+    [JsonPropertyName("systemInstruction")]
+    public SystemInstruction? SystemInstruction { get; set; }
 }
 
-public class ChatMessage
+public class SystemInstruction
+{
+    [JsonPropertyName("parts")]
+    public List<ChatPart> Parts { get; set; } = [];
+}
+
+public class ChatContent
 {
     [JsonPropertyName("role")]
     public string Role { get; set; } = string.Empty;
 
-    [JsonPropertyName("content")]
-    public string Content { get; set; } = string.Empty;
+    [JsonPropertyName("parts")]
+    public List<ChatPart> Parts { get; set; } = [];
+}
+
+public class ChatPart
+{
+    [JsonPropertyName("text")]
+    public string Text { get; set; } = string.Empty;
 }
 
 public class ChatResponse
 {
-    [JsonPropertyName("choices")]
-    public List<ChatChoice> Choices { get; set; } = [];
+    [JsonPropertyName("candidates")]
+    public List<ChatCandidate> Candidates { get; set; } = [];
 }
 
-public class ChatChoice
+public class ChatCandidate
 {
-    [JsonPropertyName("message")]
-    public ChatMessage Message { get; set; } = new();
+    [JsonPropertyName("content")]
+    public ChatContent Content { get; set; } = new();
 }

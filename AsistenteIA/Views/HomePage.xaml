@@ -2,9 +2,74 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="AsistenteIA.Views.HomePage"
-             Title="Inicio">
-    <VerticalStackLayout Padding="20" Spacing="10">
-        <Label Text="Bienvenido al Asistente Académico" FontSize="22" FontAttributes="Bold"/>
-        <Label Text="Usa la pestaña Consultar para empezar." />
-    </VerticalStackLayout>
+             Title="Inicio"
+             BackgroundColor="{AppThemeBinding Light=#F8F9FA, Dark=#121212}">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="20">
+
+            <!-- 1. Encabezado / Hero -->
+            <VerticalStackLayout Spacing="5" Margin="0,10,0,10">
+                <Label Text="👋 Bienvenido," FontSize="18" TextColor="Gray" />
+                <Label Text="Asistente Académico IA" FontSize="30" FontAttributes="Bold" TextColor="{AppThemeBinding Light=#2C3E50, Dark=#E0E0E0}" />
+                <Label Text="Tu compañero inteligente para el aprendizaje universitario." FontSize="15" TextColor="{AppThemeBinding Light=#555, Dark=#AAA}" />
+            </VerticalStackLayout>
+
+            <!-- 2. Propósito (Requisito de la guía) -->
+            <Frame Padding="20" CornerRadius="15" HasShadow="True" BorderColor="Transparent" BackgroundColor="{AppThemeBinding Light=White, Dark=#1E1E1E}">
+                <HorizontalStackLayout Spacing="15">
+                    <Label Text="🎓" FontSize="40" VerticalOptions="Center" />
+                    <VerticalStackLayout VerticalOptions="Center" Spacing="5">
+                        <Label Text="Propósito Principal" FontAttributes="Bold" FontSize="16" TextColor="{AppThemeBinding Light=Black, Dark=White}" />
+                        <Label Text="Facilitar la investigación y resolver dudas académicas interactuando con modelos de Inteligencia Artificial." FontSize="13" TextColor="Gray" LineBreakMode="WordWrap" />
+                    </VerticalStackLayout>
+                </HorizontalStackLayout>
+            </Frame>
+
+            <!-- 3. Recomendaciones de uso (Requisito de la guía) -->
+            <Frame Padding="20" CornerRadius="15" HasShadow="True" BorderColor="Transparent" BackgroundColor="{AppThemeBinding Light=White, Dark=#1E1E1E}">
+                <VerticalStackLayout Spacing="10">
+                    <HorizontalStackLayout Spacing="10">
+                        <Label Text="💡" FontSize="20" />
+                        <Label Text="Recomendaciones de uso" FontAttributes="Bold" FontSize="16" TextColor="{AppThemeBinding Light=Black, Dark=White}" VerticalOptions="Center" />
+                    </HorizontalStackLayout>
+
+                    <Grid RowDefinitions="Auto, Auto, Auto" ColumnDefinitions="Auto, *" RowSpacing="10" ColumnSpacing="10">
+                        <Label Grid.Row="0" Grid.Column="0" Text="•" TextColor="#0056b3" FontAttributes="Bold" FontSize="16"/>
+                        <Label Grid.Row="0" Grid.Column="1" Text="Verifica siempre las respuestas generadas contrastándolas con fuentes confiables." FontSize="13" TextColor="Gray" />
+
+                        <Label Grid.Row="1" Grid.Column="0" Text="•" TextColor="#0056b3" FontAttributes="Bold" FontSize="16"/>
+                        <Label Grid.Row="1" Grid.Column="1" Text="No incluyas información personal, contraseñas ni documentos sensibles en tus consultas." FontSize="13" TextColor="Gray" />
+
+                        <Label Grid.Row="2" Grid.Column="0" Text="•" TextColor="#0056b3" FontAttributes="Bold" FontSize="16"/>
+                        <Label Grid.Row="2" Grid.Column="1" Text="Mantén un enfoque estrictamente académico en tus prompts." FontSize="13" TextColor="Gray" />
+                    </Grid>
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- 4. Accesos Rápidos (Requisito de la guía) -->
+            <Label Text="Accesos Rápidos" FontAttributes="Bold" FontSize="18" TextColor="{AppThemeBinding Light=#2C3E50, Dark=#E0E0E0}" Margin="0,10,0,0" />
+
+            <Grid ColumnDefinitions="*, *" ColumnSpacing="15">
+                <!-- Tarjeta Consultar -->
+                <Frame Grid.Column="0" Padding="15" CornerRadius="12" BackgroundColor="#0056b3" HasShadow="True" BorderColor="Transparent">
+                    <VerticalStackLayout Spacing="10" HorizontalOptions="Center">
+                        <Label Text="💬" FontSize="30" HorizontalOptions="Center" />
+                        <Label Text="Consultar IA" TextColor="White" FontAttributes="Bold" HorizontalOptions="Center" />
+                        <Label Text="Usa la pestaña inferior" TextColor="#B3D7FF" FontSize="11" HorizontalOptions="Center" />
+                    </VerticalStackLayout>
+                </Frame>
+
+                <!-- Tarjeta Historial -->
+                <Frame Grid.Column="1" Padding="15" CornerRadius="12" BackgroundColor="#28a745" HasShadow="True" BorderColor="Transparent">
+                    <VerticalStackLayout Spacing="10" HorizontalOptions="Center">
+                        <Label Text="📂" FontSize="30" HorizontalOptions="Center" />
+                        <Label Text="Ver Historial" TextColor="White" FontAttributes="Bold" HorizontalOptions="Center" />
+                        <Label Text="Consultas previas" TextColor="#B3E6B3" FontSize="11" HorizontalOptions="Center" />
+                    </VerticalStackLayout>
+                </Frame>
+            </Grid>
+
+        </VerticalStackLayout>
+    </ScrollView>
 </ContentPage>

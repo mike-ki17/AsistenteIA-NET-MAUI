@@ -1,11 +1,14 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using AsistenteIA.Services;
+using AsistenteIA.Models; // Importante para poder usar ConversationRecord
 
 namespace AsistenteIA.ViewModels;
+
 public partial class ChatViewModel : ObservableObject
 {
     private readonly AiService _aiService;
+    private readonly DatabaseService _databaseService; // 1. Declaramos el servicio de base de datos
     private CancellationTokenSource? _cts;
 
     [ObservableProperty]
@@ -17,13 +20,18 @@ public partial class ChatViewModel : ObservableObject
     [ObservableProperty]
     private string statusMessage = string.Empty;
 
-    [ObservableProperty]
+    [ObservableProperty]    
     private bool isBusy;
 
     [ObservableProperty]
-    private string selectedModel = "openai/gpt-5.4-nano";
+    private string selectedModel = "gemini-2.5-flash";
 
-    public ChatViewModel(AiService aiService) => _aiService = aiService;
+    // 2. Inyectamos DatabaseService en el constructor
+    public ChatViewModel(AiService aiService, DatabaseService databaseService)
+    {
+        _aiService = aiService;
+        _databaseService = databaseService;
+    }
 
     [RelayCommand]
     private async Task AskAsync()
@@ -35,9 +43,18 @@ public partial class ChatViewModel : ObservableObject
 
         try
         {
-            Answer = await _aiService.AskAsync(
-                Prompt, SelectedModel, _cts.Token);
+            Answer = await _aiService.AskAsync(Prompt, SelectedModel, _cts.Token);
             StatusMessage = "Respuesta recibida. Verifique la información.";
+
+            // 3. CREAR Y GUARDAR EL REGISTRO EN SQLITE (Fase 10)
+            var record = new ConversationRecord
+            {
+                Prompt = this.Prompt,
+                Answer = this.Answer,
+                Category = "General"
+            };
+
+            await _databaseService.SaveAsync(record);
         }
         catch (OperationCanceledException)
         {

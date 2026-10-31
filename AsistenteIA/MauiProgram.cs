@@ -20,14 +20,22 @@ public static class MauiProgram
                 fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                 fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
             });
-
+        builder.Services.AddSingleton(new HttpClient
+        {
+            BaseAddress = new Uri("https://generativelanguage.googleapis.com/v1beta/"),
+            Timeout = TimeSpan.FromSeconds(60)
+        });
         // Registro de Servicios y ViewModels
         builder.Services.AddSingleton<ApiKeyService>();
-        builder.Services.AddSingleton<AiService>();
+        builder.Services.AddSingleton<AiService>(); 
         builder.Services.AddSingleton<DatabaseService>();
 
         builder.Services.AddTransient<ChatViewModel>();
         builder.Services.AddTransient<ChatPage>();
+        builder.Services.AddTransient<SettingsViewModel>();
+        builder.Services.AddTransient<SettingsPage>();
+        builder.Services.AddTransient<HistoryViewModel>();
+        builder.Services.AddTransient<HistoryPage>();
 
 #if DEBUG
         builder.Logging.AddDebug();

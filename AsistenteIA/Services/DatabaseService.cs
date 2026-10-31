@@ -2,48 +2,42 @@
 using AsistenteIA.Models;
 
 namespace AsistenteIA.Services;
+
 public class DatabaseService
 {
-    private SQLiteAsyncConnection? _database;
+    private SQLiteAsyncConnection? _connection;
+
+    // Configura la ruta segura en el dispositivo móvil/PC
+    private readonly string _dbPath = Path.Combine(FileSystem.AppDataDirectory, "AsistenteIA.db3");
 
     private async Task InitAsync()
     {
-        if (_database is not null)
-            return;
+        if (_connection != null) return;
 
-        // Define la ruta segura en el almacenamiento local del dispositivo
-        var dbPath = Path.Combine(FileSystem.AppDataDirectory, "asistente_ia.db3");
-        _database = new SQLiteAsyncConnection(dbPath);
-
-        // Crea la tabla basada en el modelo ConversationRecord
-        await _database.CreateTableAsync<ConversationRecord>();
+        // Inicializa la conexión y crea la tabla si no existe
+        _connection = new SQLiteAsyncConnection(_dbPath);
+        await _connection.CreateTableAsync<ConversationRecord>();
     }
 
-    // Obtener todos los registros del historial
-    public async Task<List<ConversationRecord>> GetConversationsAsync()
+    public async Task<List<ConversationRecord>> GetAllAsync()
     {
         await InitAsync();
-        return await _database!.Table<ConversationRecord>().ToListAsync();
+        // Retorna la lista requerida por el HistoryViewModel
+        return await _connection!.Table<ConversationRecord>().OrderByDescending(x => x.CreatedAt).ToListAsync();
     }
 
-    // Guardar una nueva consulta y respuesta
-    public async Task<int> SaveConversationAsync(ConversationRecord record)
+    public async Task<int> SaveAsync(ConversationRecord record)
     {
         await InitAsync();
-        return await _database!.InsertAsync(record);
+        if (record.Id != 0)
+            return await _connection!.UpdateAsync(record);
+        else
+            return await _connection!.InsertAsync(record);
     }
 
-    // Actualizar un registro (por ejemplo, al marcar como verificado)
-    public async Task<int> UpdateConversationAsync(ConversationRecord record)
+    public async Task<int> DeleteAsync(ConversationRecord record)
     {
         await InitAsync();
-        return await _database!.UpdateAsync(record);
-    }
-
-    // Eliminar un registro del historial
-    public async Task<int> DeleteConversationAsync(ConversationRecord record)
-    {
-        await InitAsync();
-        return await _database!.DeleteAsync(record);
+        return await _connection!.DeleteAsync(record);
     }
 }

@@ -1,9 +1,21 @@
-﻿namespace AsistenteIA.Views;
+﻿using AsistenteIA.ViewModels;
+
+namespace AsistenteIA.Views;
 
 public partial class HistoryPage : ContentPage
 {
-    public HistoryPage()
+    private readonly HistoryViewModel _viewModel;
+
+    public HistoryPage(HistoryViewModel viewModel)
     {
         InitializeComponent();
+        _viewModel = viewModel;
+        BindingContext = _viewModel;
+    }
+
+    protected override async void OnAppearing()
+    {
+        base.OnAppearing();
+        await _viewModel.LoadHistoryAsync();
     }
 }
